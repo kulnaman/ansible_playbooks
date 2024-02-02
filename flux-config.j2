@@ -1,0 +1,71 @@
+# Flux Configuration File Template
+
+# Flux Security Configuration
+[sign]
+max-ttl = 1209600  # 2 weeks
+default-type = "munge"
+allowed-types = [ "munge" ]
+
+# Flux IMP Configuration
+[exec]
+imp = "/usr/libexec/flux/flux-imp"
+
+# Access Configuration
+[access]
+allow-guest-user = true
+allow-root-owner = true
+
+# Bootstrap Configuration
+[bootstrap]
+curve_cert = "/etc/flux/system/curve.cert"
+default_port = 8050
+default_bind = "tcp://eth0:%p"
+default_connect = "tcp://%h:%p"
+
+# Hosts Configuration
+hosts = [
+  # This will be populated with the hosts configurations
+  {% for host_config in hosts_configs %}
+  { host = "{{ host_config }}" },
+  {% endfor %}
+]
+
+# TBON Configuration
+[tbon]
+tcp_user_timeout = "2m"
+
+# Resource Configuration
+# These entries will be dynamically populated from the node configurations
+{{ resource_config }}
+
+# KVS Configuration
+[kvs]
+checkpoint-period = "30m"
+gc-threshold = 100000
+
+# Job Ingest Validator
+[ingest.validator]
+plugins = [ "jobspec", "feasibility" ]
+
+# Job Manager Configuration
+[job-manager]
+inactive-age-limit = "7d"
+
+# Default Job Duration
+[policy.jobspec.defaults.system]
+duration = "1m"
+
+# Job Limits
+[policy.limits]
+duration = "2h"
+job-size.max.nnodes = 8
+job-size.max.ncores = 32
+
+# Scheduler Configuration
+[sched-fluxion-qmanager]
+queue-policy = "easy"
+
+[sched-fluxion-resource]
+match-policy = "lonodex"
+match-format = "rv1_nosched"
+
