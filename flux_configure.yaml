@@ -100,4 +100,4 @@
     - name: Update Flux Configuration File
       template:
         src: flux-config.j2
-        dest: /etc/flux/config.toml 
+        dest: /etc/flux/system/conf.d/system.toml 
